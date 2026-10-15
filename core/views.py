@@ -197,3 +197,11 @@ def change_password_view(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'core/change_password.html', {'form': form})
+
+
+
+@login_required
+def history_view(request):
+    # আপাতত খালি লিস্ট পাস করা হলো, যাতে এরর না আসে। পরবর্তীতে আপনার মডেল অনুযায়ী ডাটা যুক্ত করতে পারবেন।
+    history_list = [] 
+    return render(request, 'core/history.html', {'history_list': history_list})

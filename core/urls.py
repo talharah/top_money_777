@@ -19,5 +19,6 @@ urlpatterns = [
     path('register/login.html', RedirectView.as_view(pattern_name='login', permanent=False)),
     path('login/index.html', RedirectView.as_view(pattern_name='index', permanent=False)),
     path('profile/edit/', views.personal_info_view, name='personal_info'),
-path('profile/password/', views.change_password_view, name='change_password'),
+    path('profile/password/', views.change_password_view, name='change_password'),
+     path('history/', views.history_view, name='history'),
 ]

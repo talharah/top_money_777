@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen">
+    <div class="max-w-md mx-auto p-4">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6 pt-2">
+            <a href="{% url 'index' %}" class="bg-slate-800 p-2 rounded-xl text-slate-300 hover:text-white">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1 class="text-lg font-bold">Transaction History</h1>
+            <div class="w-9"></div> <!-- Spacer -->
+        </div>
+
+        <!-- History Content Tabs or List -->
+        <div class="space-y-3">
+            <!-- যদি কোনো ডাটা না থাকে -->
+            {% if not history_list %}
+                <div class="bg-slate-800/60 rounded-2xl p-6 text-center text-slate-400 mt-10">
+                    <i class="fa-solid fa-receipt text-4xl mb-3 text-slate-500"></i>
+                    <p>No transaction history found.</p>
+                </div>
+            {% else %}
+                <!-- লুপ চালিয়ে হিস্ট্রি দেখানোর জন্য -->
+                {% for item in history_list %}
+                <div class="bg-slate-800/80 rounded-2xl p-4 flex items-center justify-between border border-slate-700/50">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-bold">
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-sm">{{ item.title }}</h4>
+                            <span class="text-xs text-slate-400">{{ item.date }}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-emerald-400 font-bold text-sm">+{{ item.amount }} ৳</span>
+                        <p class="text-xs text-slate-400">{{ item.status }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
