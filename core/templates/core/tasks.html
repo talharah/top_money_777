@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earning Tasks</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-[#0f172a] text-white min-h-screen pb-24 font-sans">
+
+    <!-- Top Navigation Header -->
+    <div class="sticky top-0 bg-[#1e293b]/90 backdrop-blur-md border-b border-slate-700/50 px-4 py-3 flex items-center justify-between z-40">
+        <div class="flex items-center gap-3">
+            <a href="{% url 'index' %}" class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:text-white border border-slate-700">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1 class="text-base font-bold text-slate-100 tracking-wide">Daily Tasks</h1>
+        </div>
+        <div class="text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+            Earn Money
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="px-4 pt-5 max-w-md mx-auto space-y-4">
+
+        <!-- Task Stats Banner -->
+        <div class="bg-gradient-to-r from-emerald-900/40 to-slate-900 border border-emerald-500/30 rounded-2xl p-4 flex items-center justify-between shadow-lg">
+            <div>
+                <p class="text-xs text-slate-400">Completed Today</p>
+                <p class="text-xl font-bold text-white mt-0.5">0 <span class="text-xs text-slate-400">/ 5 Tasks</span></p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-list-check"></i>
+            </div>
+        </div>
+
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider px-1 pt-2">Available Tasks</h3>
+
+        <!-- Task List -->
+        <div class="space-y-3">
+            <!-- Task Item 2: YouTube Subscribe -->
+            <div class="bg-slate-800/90 border border-slate-700/60 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center text-lg">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-200">YouTube Channel Subscribe</p>
+                        <p class="text-[10px] text-emerald-400 font-semibold mt-0.5">+15.00 ৳ Reward</p>
+                    </div>
+                </div>
+                <button onclick="completeTask(this, 'YouTube Subscribe')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow">
+                    Start
+                </button>
+            </div>
+
+            <!-- Task Item 3: Facebook Like, Follow & Share -->
+            <div class="bg-slate-800/90 border border-slate-700/60 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center text-lg">
+                        <i class="fa-brands fa-facebook"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-200">Facebook Page Follow</p>
+                        <p class="text-[10px] text-emerald-400 font-semibold mt-0.5">+20.00 ৳ Reward</p>
+                    </div>
+                </div>
+                <button onclick="completeTask(this, 'Facebook Page Follow')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow">
+                    Start
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-[#1e293b]/95 backdrop-blur-md border-t border-slate-700/60 flex justify-around items-center py-2.5 px-6 z-50">
+        <a href="{% url 'index' %}" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[10px] font-medium">Home</span>
+        </a>
+        <a href="{% url 'tasks' %}" class="flex flex-col items-center gap-0.5 text-emerald-400">
+            <i class="fa-solid fa-list-check text-lg"></i>
+            <span class="text-[10px] font-medium">Task</span>
+        </a>
+        <a href="{% url 'plans' %}" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200">
+            <i class="fa-solid fa-gem text-lg"></i>
+            <span class="text-[10px] font-medium">VIP</span>
+        </a>
+        <a href="{% url 'profile' %}" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200">
+            <i class="fa-solid fa-user text-lg"></i>
+            <span class="text-[10px] font-medium">Profile</span>
+        </a>
+    </div>
+
+    <!-- JavaScript for Task Action -->
+    <script>
+        function completeTask(button, taskName) {
+            button.innerText = 'Completed';
+            button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            button.classList.add('bg-emerald-600', 'cursor-not-allowed');
+            button.disabled = true;
+
+            alert(`Success! Task "${taskName}" completed.`);
+        }
+    </script>
+</body>
+</html>

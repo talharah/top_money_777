@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit Funds</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    
+    if (isLoggedIn !== 'true') {
+        // Logged in na thakle auto login page-e redirect korbe
+        window.location.href = 'login.html';
+    }
+</script>
+</head>
+<body class="bg-[#0f172a] text-white min-h-screen pb-24 font-sans">
+
+    <!-- Top Navigation Header -->
+    <div class="sticky top-0 bg-[#1e293b]/90 backdrop-blur-md border-b border-slate-700/50 px-4 py-3 flex items-center justify-between z-40">
+        <div class="flex items-center gap-3">
+            <a href="index.html" class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:text-white border border-slate-700">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1 class="text-base font-bold text-slate-100 tracking-wide">Deposit Funds</h1>
+        </div>
+        <div class="text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+            Secure
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="px-4 pt-5 max-w-md mx-auto space-y-5">
+
+        <!-- Balance Card Summary -->
+        <div class="bg-gradient-to-r from-emerald-900/40 to-slate-900 border border-emerald-500/30 rounded-2xl p-4 flex items-center justify-between shadow-lg">
+            <div>
+                <p class="text-xs text-slate-400">Current Balance</p>
+                <p class="text-xl font-bold text-white mt-0.5">15.00 <span class="text-sm text-emerald-400">৳</span></p>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+        </div>
+
+        <!-- Step 1: Select Payment Method -->
+        <div>
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 px-1">1. Select Payment Method</label>
+            <div class="grid grid-cols-3 gap-3">
+                <!-- bKash -->
+                <button type="button" onclick="selectMethod('bKash', '01700000000')" id="method-bkash" class="payment-method bg-slate-800/90 border-2 border-emerald-500 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 transition shadow-sm relative">
+                    <div class="w-10 h-10 rounded-xl bg-pink-600 text-white font-bold flex items-center justify-center text-xs shadow">bKash</div>
+                    <span class="text-xs font-semibold text-slate-200">bKash</span>
+                    <span class="absolute top-2 right-2 w-4 h-4 bg-emerald-500 text-slate-900 rounded-full flex items-center justify-center text-[10px] check-icon"><i class="fa-solid fa-check"></i></span>
+                </button>
+                <!-- Nagad -->
+                <button type="button" onclick="selectMethod('Nagad', '01800000000')" id="method-nagad" class="payment-method bg-slate-800/90 border-2 border-slate-700/60 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 transition shadow-sm relative">
+                    <div class="w-10 h-10 rounded-xl bg-orange-600 text-white font-bold flex items-center justify-center text-xs shadow">Nagad</div>
+                    <span class="text-xs font-semibold text-slate-200">Nagad</span>
+                    <span class="absolute top-2 right-2 w-4 h-4 bg-emerald-500 text-slate-900 rounded-full flex items-center justify-center text-[10px] check-icon hidden"><i class="fa-solid fa-check"></i></span>
+                </button>
+                <!-- Rocket -->
+                <button type="button" onclick="selectMethod('Rocket', '01900000000')" id="method-rocket" class="payment-method bg-slate-800/90 border-2 border-slate-700/60 rounded-2xl p-3 flex flex-col items-center justify-center gap-2 transition shadow-sm relative">
+                    <div class="w-10 h-10 rounded-xl bg-purple-600 text-white font-bold flex items-center justify-center text-xs shadow">Rocket</div>
+                    <span class="text-xs font-semibold text-slate-200">Rocket</span>
+                    <span class="absolute top-2 right-2 w-4 h-4 bg-emerald-500 text-slate-900 rounded-full flex items-center justify-center text-[10px] check-icon hidden"><i class="fa-solid fa-check"></i></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Payment Instructions Box -->
+        <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-4 text-xs space-y-2">
+            <p class="font-bold text-slate-300 flex items-center gap-1.5 text-amber-400">
+                <i class="fa-solid fa-circle-info"></i> Send Money Instructions:
+            </p>
+            <p class="text-slate-400 leading-relaxed">
+                দয়া করে নিচের নামপে <span id="selected-gateway" class="font-bold text-white">bKash</span> নাম্বারে Send Money করুন। ক্যাশ-আউট করার পর প্রাপ্ত Transaction ID (TrxID) এবং আপনার প্রেরক নম্বর নিচে লিখুন।
+            </p>
+            <div class="bg-slate-900/90 border border-slate-700 p-2.5 rounded-xl flex items-center justify-between mt-2">
+                <div>
+                    <span class="text-[10px] text-slate-400 block">Agent/Merchant Number</span>
+                    <span id="gateway-number" class="text-sm font-bold text-emerald-400 tracking-wider">01700000000</span>
+                </div>
+                <button onclick="copyNumber()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 font-medium transition text-[11px] flex items-center gap-1">
+                    <i class="fa-solid fa-copy"></i> Copy
+                </button>
+            </div>
+        </div>
+
+        <!-- Deposit Form Fields -->
+        <form onsubmit="handleDeposit(event)" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Amount (BDT)</label>
+                <div class="relative">
+                    <span class="absolute left-3.5 top-3.5 text-slate-400 text-sm font-bold">৳</span>
+                    <input type="number" id="deposit-amount" placeholder="Min. 100 ৳" required min="100" class="w-full bg-slate-800/90 border border-slate-700 rounded-xl py-3 pl-9 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Sender Mobile Number</label>
+                <input type="tel" id="sender-number" placeholder="e.g. 01XXXXXXXXX" required class="w-full bg-slate-800/90 border border-slate-700 rounded-xl py-3 px-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5 px-1">Transaction ID (TrxID)</label>
+                <input type="text" id="trx-id" placeholder="e.g. 9N87AH32S" required class="w-full bg-slate-800/90 border border-slate-700 rounded-xl py-3 px-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition uppercase">
+            </div>
+
+            <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition text-sm tracking-wide mt-2">
+                Submit Deposit Request
+            </button>
+        </form>
+
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-[#1e293b]/95 backdrop-blur-md border-t border-slate-700/60 flex justify-around items-center py-2.5 px-6 z-50">
+        <a href="index.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[10px] font-medium">Home</span>
+        </a>
+        <a href="#" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200">
+            <i class="fa-solid fa-list-check text-lg"></i>
+            <span class="text-[10px] font-medium">Task</span>
+        </a>
+        <a href="plans.html" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200">
+            <i class="fa-solid fa-gem text-lg"></i>
+            <span class="text-[10px] font-medium">VIP</span>
+        </a>
+        <a href="#" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200">
+            <i class="fa-solid fa-user text-lg"></i>
+            <span class="text-[10px] font-medium">Profile</span>
+        </a>
+    </div>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        let currentMethod = 'bKash';
+        let currentNumber = '01700000000';
+
+        function selectMethod(method, number) {
+            currentMethod = method;
+            currentNumber = number;
+            
+            // Update UI styles
+            document.querySelectorAll('.payment-method').forEach(btn => {
+                btn.classList.remove('border-emerald-500');
+                btn.classList.add('border-slate-700/60');
+                btn.querySelector('.check-icon').classList.add('hidden');
+            });
+
+            const selectedBtn = document.getElementById('method-' + method.toLowerCase());
+            selectedBtn.classList.remove('border-slate-700/60');
+            selectedBtn.classList.add('border-emerald-500');
+            selectedBtn.querySelector('.check-icon').classList.remove('hidden');
+
+            // Update Instructions
+            document.getElementById('selected-gateway').innerText = method;
+            document.getElementById('gateway-number').innerText = number;
+        }
+
+        function copyNumber() {
+            navigator.clipboard.writeText(currentNumber);
+            alert(currentMethod + ' number copied: ' + currentNumber);
+        }
+
+        // কমন সেভ ফাংশনটি যেকোনো জায়গায় রাখতে পারেন
+function saveTransaction(type, amount, method, status = 'Pending') {
+    let history = JSON.parse(localStorage.getItem('transactionHistory')) || [];
+    let newTx = {
+        id: 'TX' + Math.floor(Math.random() * 100000),
+        type: type,
+        amount: amount,
+        method: method,
+        status: status,
+        date: new Date().toLocaleDateString('bn-BD') + ' ' + new Date().toLocaleTimeString('bn-BD')
+    };
+    history.unshift(newTx);
+    localStorage.setItem('transactionHistory', JSON.stringify(history));
+}
+
+// আপনার যে handleDeposit ফাংশনটি কোডে আছে, তার ভেতরে শুধু saveTransaction কল করে দেবেন:
+function handleDeposit(event) {
+    event.preventDefault();
+    const amount = document.getElementById('deposit-amount').value;
+    const sender = document.getElementById('sender-number').value;
+    const trx = document.getElementById('trx-id').value;
+
+    // --- এই লাইনটি এখানে যুক্ত করে দিন ---
+    saveTransaction('Deposit', amount, currentMethod, 'Pending');
+
+    alert(`Deposit Request Submitted Successfully!\nMethod: ${currentMethod}\nAmount: ${amount} ৳\nTrxID: ${trx}`);
+    window.location.href = 'index.html';
+}
+    </script>
+</body>
+</html>

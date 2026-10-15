@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-[#0f172a] text-white min-h-screen pb-24 font-sans">
+
+    <!-- Top Navigation Header -->
+    <div class="sticky top-0 bg-[#1e293b]/90 backdrop-blur-md border-b border-slate-700/50 px-4 py-3 flex items-center justify-between z-40">
+        <div class="flex items-center gap-3">
+            <a href="{% url 'index' %}" class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:text-white border border-slate-700">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1 class="text-base font-bold text-slate-100 tracking-wide">My Profile</h1>
+        </div>
+        
+        <div class="text-xs text-blue-400 font-semibold bg-blue-500/10 px-2.5 py-1 rounded-full border border-blue-500/20">
+            Account
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="px-4 pt-5 max-w-md mx-auto space-y-4">
+
+        <!-- User Info Card (Dynamic Backend Data) -->
+        <div class="bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-700/60 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+            <div class="w-14 h-14 rounded-full bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center text-2xl font-bold">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div>
+                <h2 class="text-sm font-bold text-white">{{ request.user.first_name|default:request.user.username }}</h2>
+                <p class="text-xs text-slate-400 mt-0.5">{{ request.user.username }}</p>
+                <span class="inline-block mt-1.5 text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-semibold">VIP Level: 0</span>
+            </div>
+        </div>
+
+        <!-- Menu Options List -->
+        <div class="bg-slate-800/90 border border-slate-700/60 rounded-2xl divide-y divide-slate-700/40 overflow-hidden shadow-sm">
+            <a href="{% url 'personal_info' %}" class="p-3.5 flex items-center justify-between hover:bg-slate-700/30 transition">
+                <div class="flex items-center gap-3 text-xs font-semibold text-slate-200">
+                    <i class="fa-solid fa-wallet text-blue-400 w-5"></i> Personal Information
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+            </a>
+            <a href="{% url 'change_password' %}" class="p-3.5 flex items-center justify-between hover:bg-slate-700/30 transition">
+                <div class="flex items-center gap-3 text-xs font-semibold text-slate-200">
+                    <i class="fa-solid fa-shield-halved text-emerald-400 w-5"></i> Change Password
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+            </a>
+            <a href="{% url 'refer' %}" class="p-3.5 flex items-center justify-between hover:bg-slate-700/30 transition">
+                <div class="flex items-center gap-3 text-xs font-semibold text-slate-200">
+                    <i class="fa-solid fa-users text-purple-400 w-5"></i> Referral / Invite Friends
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+            </a>
+            <a href="{% url 'support' %}" class="p-3.5 flex items-center justify-between hover:bg-slate-700/30 transition">
+                <div class="flex items-center gap-3 text-xs font-semibold text-slate-200">
+                    <i class="fa-solid fa-headset text-amber-400 w-5"></i> Customer Support
+                </div>
+                <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+            </a>
+        </div>
+
+        <!-- Logout Button -->
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="w-full bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-bold py-3.5 rounded-xl transition text-xs tracking-wide flex items-center justify-center gap-2">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout Account
+            </button>
+        </form>
+
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-[#1e293b]/95 backdrop-blur-md border-t border-slate-700/60 flex justify-around items-center py-2.5 px-6 z-50">
+        <a href="{% url 'index' %}" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[10px] font-medium">Home</span>
+        </a>
+        <a href="{% url 'tasks' %}" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200">
+            <i class="fa-solid fa-list-check text-lg"></i>
+            <span class="text-[10px] font-medium">Task</span>
+        </a>
+        <a href="{% url 'plans' %}" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-200">
+            <i class="fa-solid fa-gem text-lg"></i>
+            <span class="text-[10px] font-medium">VIP</span>
+        </a>
+        <a href="{% url 'profile' %}" class="flex flex-col items-center gap-0.5 text-blue-400">
+            <i class="fa-solid fa-user text-lg"></i>
+            <span class="text-[10px] font-medium">Profile</span>
+        </a>
+    </div>
+
+</body>
+</html>
