@@ -8,10 +8,10 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-# আপনার পছন্দের Username, Email এবং Password দিন
+# ⬇️ এখানে আপনার পছন্দমতো Username, Email এবং Password বসান ⬇️
 USERNAME = 'admin'
-EMAIL = 'admin@example.com'
-PASSWORD = 'YourStrongPassword123'  # আপনার পছন্দমতো পাসওয়ার্ড সেট করুন
+EMAIL = 'admin@fahad.com'
+PASSWORD = 'Password123'  # এই পাসওয়ার্ডটি মনে রাখবেন, লগইন করতে লাগবে
 
 def make_admin():
     if not User.objects.filter(username=USERNAME).exists():
