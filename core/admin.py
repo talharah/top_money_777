@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import SystemSetting, PaymentMethod, Task, Deposit, Withdraw, InvestmentPlan
-
+from .models import SystemSetting, PaymentMethod, Task, Deposit, Withdraw, InvestmentPlan, UserProfile
 # 1. System Settings Admin
 @admin.register(SystemSetting)
 class SystemSettingAdmin(admin.ModelAdmin):
