@@ -200,8 +200,14 @@ def change_password_view(request):
 
 
 
-@login_required
+@login_required(login_url='login')
 def history_view(request):
-    # আপাতত খালি লিস্ট পাস করা হলো, যাতে এরর না আসে। পরবর্তীতে আপনার মডেল অনুযায়ী ডাটা যুক্ত করতে পারবেন।
-    history_list = [] 
-    return render(request, 'core/history.html', {'history_list': history_list})
+    # বর্তমান ইউজারের সব ডিপোজিট এবং উইথড্রয়াল ডাটা নিয়ে আসা
+    user_deposits = Deposit.objects.filter(user=request.user).order_by('-created_at')
+    user_withdraw = Withdraw.objects.filter(user=request.user).order_by('-created_at')
+    
+    context = {
+        'deposits': user_deposits,
+        'withdraw': user_withdraw,
+    }
+    return render(request, 'core/history.html', context)
