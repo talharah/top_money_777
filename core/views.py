@@ -225,7 +225,7 @@ def history_view(request):
 
 
 
-   @login_required(login_url='login')
+@login_required(login_url='login')
 def daily_checkin_view(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     now = timezone.now()
