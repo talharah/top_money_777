@@ -6,10 +6,9 @@ class CoreConfig(AppConfig):
     name = 'core'
 
     def ready(self):
-        # রেন্ডার বা সার্ভার চালুর সময় অটোমেটিক মাইগ্রেশন রান করার লজিক
-        if 'runserver' in sys.argv or 'gunicorn' in sys.argv or 'wsgi' in sys.argv:
+        if not any(cmd in sys.argv for cmd in ['makemigrations', 'shell', 'test']):
             try:
                 from django.core.management import call_command
                 call_command('migrate', interactive=False)
             except Exception as e:
-                print(f"Auto migration error: {e}")
+                print(f"Migration execution info: {e}")
