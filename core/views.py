@@ -225,7 +225,7 @@ def history_view(request):
 
 
 
-    @login_required(login_url='login')
+   @login_required(login_url='login')
 def daily_checkin_view(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
     now = timezone.now()
@@ -234,7 +234,6 @@ def daily_checkin_view(request):
     if profile.last_check_in and now - profile.last_check_in < timedelta(hours=24):
         messages.error(request, 'আপনি ইতিমধ্যে গত ২৪ ঘণ্টার মধ্যে ডেইলি রিওয়ার্ড গ্রহণ করেছেন। আবার ২৪ ঘণ্টা পর চেষ্টা করুন!')
     else:
-        # ৫ টাকা বা আপনার নির্ধারিত বোনাস ব্যালেন্সে যোগ করা
         reward_amount = 5.00
         profile.balance += reward_amount
         profile.last_check_in = now
