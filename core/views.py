@@ -36,7 +36,7 @@ def register_view(request):
     if request.user.is_authenticated:
         return redirect('index')
 
-    # URL থেকে রেফারের কোড সংগ্রহ করা (যেমন: /register/?ref=017XXXXXXXX)
+    # URL theke refer-er code songroho kora (jemon: /register/?ref=username)
     ref_code = request.GET.get('ref')
 
     if request.method == 'POST':
@@ -47,15 +47,25 @@ def register_view(request):
         if User.objects.filter(username=phone).exists():
             return render(request, 'core/register.html', {'error': 'This phone number is already registered!'})
         
+        # User toiri kora
         user = User.objects.create_user(username=phone, password=password, first_name=full_name)
         
-        # কে রেফার করেছে তা এখানে প্রসেস করতে পারেন চাইলে কোনো ফিল্ডে সেভ করে
-        UserProfile.objects.get_or_create(user=user, phone_number=phone)
+        # UserProfile toiri kora ebong ke refer koreche ta track kora (jodi apnar model-e referred_by ba similar kono field thake)
+        profile, created = UserProfile.objects.get_or_create(user=user, phone_number=phone)
+        
+        if ref_code:
+            try:
+                # Jodi referral code diye kono user ke khuje pawa jay
+                referrer_profile = UserProfile.objects.get(referral_code=ref_code)
+                # Apnar model-e referred_by field thakle ekhane set korte paren, jemon:
+                # profile.referred_by = referrer_profile.user
+                # profile.save()
+            except UserProfile.DoesNotExist:
+                pass
         
         return redirect('login')
         
     return render(request, 'core/register.html')
-
 # Logout View
 @login_required(login_url='login')
 def logout_view(request):
