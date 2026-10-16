@@ -8,7 +8,7 @@ class UserProfile(models.Model):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     referral_code = models.CharField(max_length=50, unique=True, blank=True, null=True)
-
+    last_check_in = models.DateTimeField(blank=True, null=True) # নতুন ফিল্ড
     def save(self, *args, **kwargs):
         if not self.referral_code:
             # Ekhane number-er bodole user-er username ba nam theke code generate hobe

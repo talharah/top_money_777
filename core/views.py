@@ -7,7 +7,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.db import transaction
 from .models import UserProfile, Deposit, Withdraw, InvestmentPlan, SystemSetting, Task, PaymentMethod
-
+from django.utils import timezone
+from datetime import timedelta
 # Login View
 def login_view(request):
     if request.user.is_authenticated:
@@ -221,3 +222,23 @@ def history_view(request):
         'withdraw': user_withdraw,
     }
     return render(request, 'core/history.html', context)
+
+
+
+    @login_required(login_url='login')
+def daily_checkin_view(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    now = timezone.now()
+    
+    # চেক করুন শেষ চেক-ইন থেকে ২৪ ঘণ্টা পার হয়েছে কিনা
+    if profile.last_check_in and now - profile.last_check_in < timedelta(hours=24):
+        messages.error(request, 'আপনি ইতিমধ্যে গত ২৪ ঘণ্টার মধ্যে ডেইলি রিওয়ার্ড গ্রহণ করেছেন। আবার ২৪ ঘণ্টা পর চেষ্টা করুন!')
+    else:
+        # ৫ টাকা বা আপনার নির্ধারিত বোনাস ব্যালেন্সে যোগ করা
+        reward_amount = 5.00
+        profile.balance += reward_amount
+        profile.last_check_in = now
+        profile.save()
+        messages.success(request, f'অভিনন্দন! সফলভাবে ৳{reward_amount} ডেইলি রিওয়ার্ড মেইন ব্যালেন্সে যোগ হয়েছে।')
+        
+    return redirect('index')

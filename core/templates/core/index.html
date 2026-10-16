@@ -152,22 +152,26 @@
     </script>
 
     <!-- Daily Claim Bonus Card -->
-    <div class="px-4 py-2">
-        <div class="bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 rounded-2xl p-3.5 flex items-center justify-between shadow-lg">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-400 text-xl">
-                    <i class="fa-solid fa-gift"></i>
-                </div>
-                <div>
-                    <h3 class="text-xs font-bold text-white">Daily Check-in Reward</h3>
-                    <p class="text-[11px] text-slate-300">আজকের ডেইলি রিওয়ার্ড গ্রহণ করুন</p>
-                </div>
+<div class="px-4 py-2">
+    <div class="bg-gradient-to-r from-indigo-900/60 to-purple-900/60 border border-indigo-500/30 rounded-2xl p-3.5 flex items-center justify-between shadow-lg">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-400 text-xl">
+                <i class="fa-solid fa-gift"></i>
             </div>
-            <button onclick="this.innerText='Claimed!'; this.disabled=true; this.classList.add('opacity-50')" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-md transition">
+            <div>
+                <h3 class="text-xs font-bold text-white">Daily Check-in Reward</h3>
+                <p class="text-[11px] text-slate-300">প্রতি ২৪ ঘণ্টায় ১ বার ৫ টাকা গ্রহণ করুন</p>
+            </div>
+        </div>
+        
+        <form action="{% url 'daily_checkin' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-md transition">
                 Claim 5.00 ৳
             </button>
-        </div>
+        </form>
     </div>
+</div>
 
     <!-- Grid Menu Services (8 Primary Action Buttons) -->
     <div class="px-4 py-3">
