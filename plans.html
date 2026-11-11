@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Plans</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    
+    if (isLoggedIn !== 'true') {
+        // Logged in na thakle auto login page-e redirect korbe
+        window.location.href = 'login.html';
+    }
+</script>
+</head>
+<body class="bg-[#e2e8f0] text-white min-h-screen pb-20">
+
+    <!-- Top Navigation Bar -->
+    <div class="fixed top-0 left-0 right-0 bg-[#0d1b2a] border-b border-gray-800 flex items-center justify-between px-4 py-3 z-50">
+        <a href="index.html" class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <h1 class="text-lg font-semibold">VIP Plans</h1>
+        <div class="w-8"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="pt-20 px-4 space-y-6 max-w-md mx-auto">
+
+        <!-- VIP 1 Card -->
+        <div class="bg-[#5b32a3] rounded-xl overflow-hidden shadow-lg border border-purple-400 text-center">
+            <!-- Header -->
+            <div class="bg-[#00b020] py-3 text-xl font-bold tracking-wider">
+                VIP 1
+            </div>
+            <!-- Body Details -->
+            <div class="p-5 space-y-3 text-sm md:text-base">
+                <p class="font-semibold text-white">300.00 ৳ / মেয়াদ : 2 Month</p>
+                <p class="text-gray-200">প্রতিদিন বিজ্ঞাপন লিমিট : ১ টি</p>
+                <p class="text-gray-200">রেফারেল বোনাস : Upto 1 Level</p>
+                <p class="text-gray-200">মিনিমাম ক্যাশ আউট লিমিট 100 টাকা</p>
+                
+                <!-- Buy Button -->
+            <!-- Buy Button -->
+<div class="pt-3">
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="plan_id" value="1">
+        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition">
+            কিনুন
+        </button>
+    </form>
+</div>    
+            </div>
+        </div>
+
+        <!-- VIP 2 Card -->
+        <div class="bg-[#5b32a3] rounded-xl overflow-hidden shadow-lg border border-purple-400 text-center">
+            <!-- Header -->
+            <div class="bg-[#00b020] py-3 text-xl font-bold tracking-wider">
+                VIP 2
+            </div>
+            <!-- Body Details -->
+            <div class="p-5 space-y-3 text-sm md:text-base">
+                <p class="font-semibold text-white">500.00 ৳ / মেয়াদ : 2 Month</p>
+                <p class="text-gray-200">প্রতিদিন বিজ্ঞাপন লিমিট : ২ টি</p>
+                <p class="text-gray-200">রেফারেল বোনাস : Upto 1 Level</p>
+                <p class="text-gray-200">মিনিমাম ক্যাশ আউট লিমিট 100 টাকা</p>
+                
+                <!-- Buy Button -->
+                <!-- Buy Button -->
+<div class="pt-3">
+    <form method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="plan_id" value="1">
+        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition">
+            কিনুন
+        </button>
+    </form>
+</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-[#0d1b2a] border-t border-gray-800 flex justify-around items-center py-3 px-6 z-50">
+        <a href="index.html" class="text-gray-400 text-lg"><i class="fa-solid fa-house"></i></a>
+        <a href="#" class="text-gray-400 text-lg"><i class="fa-solid fa-comment-dots"></i></a>
+        <a href="plans.html" class="text-white text-lg"><i class="fa-solid fa-paper-plane"></i></a>
+    </div>
+
+</body>
+</html>
