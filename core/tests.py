@@ -20,19 +20,25 @@ from .models import (
 
 
 class AdminBootstrapTests(TestCase):
-    def test_bootstrap_promotes_existing_user_without_changing_password(self):
+    def test_bootstrap_promotes_existing_user_and_resets_password(self):
         user = User.objects.create_user(
             username='bootstrap-existing', password='existing-safe-password'
         )
+        new_password = 'new-safe-bootstrap-password'
 
-        with patch.dict(os.environ, {'DJANGO_SUPERUSER_USERNAME': user.username}, clear=True):
+        environment = {
+            'DJANGO_SUPERUSER_USERNAME': user.username,
+            'DJANGO_SUPERUSER_PASSWORD': new_password,
+        }
+        with patch.dict(os.environ, environment, clear=True):
             bootstrap_admin()
 
         user.refresh_from_db()
         self.assertTrue(user.is_active)
         self.assertTrue(user.is_staff)
         self.assertTrue(user.is_superuser)
-        self.assertTrue(user.check_password('existing-safe-password'))
+        self.assertFalse(user.check_password('existing-safe-password'))
+        self.assertTrue(user.check_password(new_password))
 
     def test_bootstrap_creates_admin_user_from_environment(self):
         environment = {

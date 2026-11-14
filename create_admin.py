@@ -40,9 +40,12 @@ def main():
         if not getattr(user, field):
             setattr(user, field, True)
             changed_fields.append(field)
+    if password and not user.check_password(password):
+        user.set_password(password)
+        changed_fields.append('password')
     if changed_fields:
         user.save(update_fields=changed_fields)
-    print(f'Admin permissions ensured for: {username}')
+    print(f'Admin account ensured for: {username}')
 
 
 if __name__ == '__main__':
