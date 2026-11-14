@@ -44,3 +44,5 @@ Production mode enables HTTPS redirects, secure session/CSRF cookies, and root-h
 Configure persistent media storage (or a web-server media alias) in production so VIP plan images remain available after deploys. The built-in `/media/` route is enabled only in development.
 
 On Procfile-based hosts, the `release` process applies database migrations and collects static files before the new web release starts.
+
+For Render, attach a persistent PostgreSQL database and set `DATABASE_URL` on the web service. PostgreSQL support is included in the requirements. To bootstrap the first admin without a service shell, temporarily set `DJANGO_SUPERUSER_USERNAME`, `DJANGO_SUPERUSER_EMAIL`, and `DJANGO_SUPERUSER_PASSWORD` in the service environment, then deploy. The release process creates the account if it does not exist or grants admin permissions to the matching existing account. Remove all three bootstrap variables after the successful deploy; later deploys leave the account in place.

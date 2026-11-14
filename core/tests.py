@@ -1,5 +1,7 @@
 from datetime import timedelta
 from decimal import Decimal
+import os
+from unittest.mock import patch
 from uuid import uuid4
 
 from django.contrib import admin
@@ -9,10 +11,51 @@ from django.test import RequestFactory, TestCase
 from django.urls import reverse
 from django.utils import timezone
 
+from create_admin import main as bootstrap_admin
+
 from .models import (
     Deposit, InvestmentPlan, PaymentMethod, ReferralCommission, SupportTicket,
     SystemSetting, Task, TaskSubmission, UserInvestment, UserProfile, Withdraw,
 )
+
+
+class AdminBootstrapTests(TestCase):
+    def test_bootstrap_promotes_existing_user_without_changing_password(self):
+        user = User.objects.create_user(
+            username='bootstrap-existing', password='existing-safe-password'
+        )
+
+        with patch.dict(os.environ, {'DJANGO_SUPERUSER_USERNAME': user.username}, clear=True):
+            bootstrap_admin()
+
+        user.refresh_from_db()
+        self.assertTrue(user.is_active)
+        self.assertTrue(user.is_staff)
+        self.assertTrue(user.is_superuser)
+        self.assertTrue(user.check_password('existing-safe-password'))
+
+    def test_bootstrap_creates_admin_user_from_environment(self):
+        environment = {
+            'DJANGO_SUPERUSER_USERNAME': 'bootstrap-new',
+            'DJANGO_SUPERUSER_EMAIL': 'bootstrap@example.test',
+            'DJANGO_SUPERUSER_PASSWORD': 'safe-bootstrap-password',
+        }
+
+        with patch.dict(os.environ, environment, clear=True):
+            bootstrap_admin()
+
+        user = User.objects.get(username='bootstrap-new')
+        self.assertTrue(user.is_active)
+        self.assertTrue(user.is_staff)
+        self.assertTrue(user.is_superuser)
+        self.assertEqual(user.email, 'bootstrap@example.test')
+        self.assertTrue(user.check_password('safe-bootstrap-password'))
+
+    def test_bootstrap_does_nothing_without_environment_configuration(self):
+        with patch.dict(os.environ, {}, clear=True):
+            bootstrap_admin()
+
+        self.assertFalse(User.objects.filter(is_superuser=True).exists())
 
 
 class PlatformTestCase(TestCase):
