@@ -246,3 +246,27 @@ class ReferralCommission(models.Model):
 
     def __str__(self):
         return f"{self.recipient.user.username} - L{self.level} - {self.amount}৳"
+
+
+
+        # Password reset request (admin approve korle password change hoy)
+class PasswordResetRequest(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'Pending', 'Pending'
+        APPROVED = 'Approved', 'Approved'
+        REJECTED = 'Rejected', 'Rejected'
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='password_reset_requests')
+    new_password_hash = models.CharField(max_length=255)
+    note = models.CharField(max_length=255, blank=True, default='')
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Password reset request'
+        verbose_name_plural = 'Password reset requests'
+
+    def __str__(self):
+        return f"{self.user.username} - {self.status}"

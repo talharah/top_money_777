@@ -1,10 +1,10 @@
 from decimal import Decimal, ROUND_HALF_UP
 
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db import transaction
 
 from .models import (
-    Deposit, InvestmentPlan, PaymentMethod, ReferralCommission, SupportTicket,
+    Deposit, InvestmentPlan, PasswordResetRequest, PaymentMethod, ReferralCommission, SupportTicket,
     SystemSetting, Task, TaskSubmission, UserInvestment, UserProfile, Withdraw,
 )
 
@@ -204,3 +204,36 @@ class ReferralCommissionAdmin(admin.ModelAdmin):
     list_filter = ('level', 'created_at')
     search_fields = ('recipient__user__username', 'referred_profile__user__username', 'deposit__trx_id')
     readonly_fields = tuple(field.name for field in ReferralCommission._meta.fields)
+
+
+
+@admin.register(PasswordResetRequest)
+class PasswordResetRequestAdmin(admin.ModelAdmin):
+    list_display = ('user', 'status', 'note', 'created_at')
+    list_filter = ('status', 'created_at')
+    search_fields = ('user__username', 'note')
+    readonly_fields = ('user', 'new_password_hash', 'note', 'status', 'created_at', 'updated_at')
+    actions = ('approve_requests', 'reject_requests')
+
+    def has_add_permission(self, request):
+        return False
+
+    @admin.action(description='Approve selected (user-er password change hobe)')
+    def approve_requests(self, request, queryset):
+        done = 0
+        with transaction.atomic():
+            for req in queryset.select_for_update().filter(status=PasswordResetRequest.Status.PENDING):
+                user = req.user
+                user.password = req.new_password_hash
+                user.save(update_fields=['password'])
+                req.status = PasswordResetRequest.Status.APPROVED
+                req.save(update_fields=['status', 'updated_at'])
+                done += 1
+        self.message_user(request, f'{done} ta password reset hoyeche.', messages.SUCCESS)
+
+    @admin.action(description='Reject selected')
+    def reject_requests(self, request, queryset):
+        count = queryset.filter(status=PasswordResetRequest.Status.PENDING).update(
+            status=PasswordResetRequest.Status.REJECTED
+        )
+        self.message_user(request, f'{count} ta request reject kora hoyeche.', messages.SUCCESS)

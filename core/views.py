@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -12,7 +13,7 @@ from django.db import IntegrityError, transaction
 from django.db.models import F, Q, Sum
 from django.views.decorators.http import require_POST
 from .models import (
-    Deposit, InvestmentPlan, PaymentMethod, ReferralCommission, SupportTicket,
+    Deposit, InvestmentPlan, PasswordResetRequest, PaymentMethod, ReferralCommission, SupportTicket,
     SystemSetting, Task, TaskSubmission, UserInvestment, UserProfile, Withdraw,
 )
 from django.utils import timezone
@@ -22,6 +23,9 @@ from urllib.parse import urlencode
 
 CENT = Decimal('0.01')
 
+SUCCESS_RESET_MESSAGE = (
+    'আপনার request জমা হয়েছে। অ্যাডমিন যাচাই করে approve করলে নতুন password দিয়ে লগইন করতে পারবেন।'
+)
 
 def parse_amount(value):
     try:
@@ -113,6 +117,53 @@ def register_view(request):
         return redirect('login')
         
     return render(request, 'core/register.html', {'ref_code': ref_code})
+
+def forgot_password_view(request):
+    if request.user.is_authenticated:
+        return redirect('change_password')
+
+    setting, _ = SystemSetting.objects.get_or_create(pk=1)
+
+    if request.method == 'POST':
+        phone = request.POST.get('phone', '').strip()
+        new_password = request.POST.get('new_password', '')
+        confirm_password = request.POST.get('confirm_password', '')
+        note = request.POST.get('note', '').strip()[:255]
+
+        if not phone or not new_password:
+            messages.error(request, 'ফোন নম্বর এবং নতুন password দিন।')
+        elif new_password != confirm_password:
+            messages.error(request, 'দুটি password মেলেনি।')
+        else:
+            user = User.objects.filter(username=phone).first()
+            if user is None:
+                messages.success(request, SUCCESS_RESET_MESSAGE)
+                return redirect('forgot_password')
+            try:
+                validate_password(new_password, user=user)
+            except ValidationError as error:
+                messages.error(request, ' '.join(error.messages))
+            else:
+                with transaction.atomic():
+                    pending = PasswordResetRequest.objects.select_for_update().filter(
+                        user=user, status=PasswordResetRequest.Status.PENDING
+                    ).first()
+                    if pending:
+                        pending.new_password_hash = make_password(new_password)
+                        pending.note = note
+                        pending.save(update_fields=['new_password_hash', 'note', 'updated_at'])
+                    else:
+                        PasswordResetRequest.objects.create(
+                            user=user,
+                            new_password_hash=make_password(new_password),
+                            note=note,
+                        )
+                messages.success(request, SUCCESS_RESET_MESSAGE)
+                return redirect('forgot_password')
+
+    return render(request, 'core/forgot_password.html', {'setting': setting})
+
+
 # Logout View
 @login_required(login_url='login')
 def logout_view(request):
