@@ -160,9 +160,7 @@ def forgot_password_view(request):
                         )
                 messages.success(request, SUCCESS_RESET_MESSAGE)
                 return redirect('forgot_password')
-
-        return render(request, 'core/forgot_pass.html', {'setting': setting})
-
+    return render(request, 'core/forgot_pass.html', {'setting': setting})
 
 # Logout View
 @login_required(login_url='login')
