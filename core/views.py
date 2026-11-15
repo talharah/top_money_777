@@ -109,7 +109,7 @@ def register_view(request):
             defaults={'phone_number': phone, 'balance': setting.welcome_bonus},
         )
         
-        referrer_profile = UserProfile.objects.filter(referral_code=ref_code).exclude(user=user).first()
+        referrer_profile = UserProfile.objects.filter(referral_code__iexact=ref_code).exclude(user=user).first()
         if referrer_profile:
             profile.referred_by = referrer_profile
             profile.save(update_fields=['referred_by'])

@@ -1,3 +1,4 @@
+import secrets
 from datetime import timedelta
 from decimal import Decimal
 
@@ -5,6 +6,13 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+
+# Referral code: random, unique, phone number theke alada
+REFERRAL_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+
+
+def generate_referral_code(length=8):
+    return ''.join(secrets.choice(REFERRAL_ALPHABET) for _ in range(length))
 
 # User Profile Model
 class UserProfile(models.Model):
@@ -18,9 +26,13 @@ class UserProfile(models.Model):
     last_check_in = models.DateTimeField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
+                
         if not self.referral_code:
-            base_code = self.user.username
-            self.referral_code = base_code
+            while True:
+                code = generate_referral_code()
+                if not UserProfile.objects.filter(referral_code=code).exists():
+                    self.referral_code = code
+                    break
         super().save(*args, **kwargs)
 
 
